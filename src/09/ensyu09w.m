@@ -85,7 +85,7 @@ for n=1:nt-1
     delta_x_2d = delta_x / (beta*dt^2) - xd(n) / (beta*dt) - x2d(n) / (2*beta);
 
     delta_x_d = gamma / (beta*dt) * delta_x - gamma / beta * xd(n) ...
-                + (1 - gamma / (2*beta)) + dt * x2d(n);
+                + (1 - gamma / (2*beta)) * dt * x2d(n);
 
     % 次ステップの変位
     x(n+1) = x(n) + delta_x;
