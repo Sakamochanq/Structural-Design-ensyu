@@ -1,14 +1,11 @@
-% 基盤面の加速度 (G)
-a = ones(1, 101);
+% 1列目：時間（sec）,　2列目：基盤面の加速度（m/s²）
+data = readmatrix("l2wave.csv");
 
-% 初期条件入力 =0G
-a(1) = 0;
-
-% 基盤面の加速度 (m/s2)
-a = a*9.81;
+% 基盤面の加速度a（m/s²）
+a = data(:,2)'/1000*9.81;
 
 % 時刻t
-t = (0:0.1:10);
+t = data(:,1)';
 
 plot(t, a)
 xlabel('Time (s)')
@@ -40,9 +37,9 @@ c = 2 * gzai * (m*k)^0.5;
 
 
 % 外力増分 delt_p
-delta_p = m * diff(a);
+delta_p = -m * diff(a);
 
-t2 = (0:0.1:9.9);
+t2 = (1:nt-1);
 
 plot(t2, delta_p)
 xlabel('Time (s)')
@@ -98,14 +95,30 @@ for n=1:nt-1
 
 end
 
+% ------- 未定義？ ------- %
+
+% nstep = 0;
+% natural = 0;
+
+% ----------------------- %
+
 x_max = max(x)
 x_min = min(x)
+
+temp = max(x_max, -x_min);
+
+amax(nstep) = k*temp / m / 9.81 * 1000
+
+
+plot(natural, amax)
+xlabel('Natural Period（s）')
+ylabel('Maxium response of accelerati')
 
 plot(t, x)
 xlabel('Times (s)')
 ylabel('Displacement (m)');
 
-print -dpng ./09/figure09-1
+% print -dpng ./09/figure09-1
 
 plot(t, xd)
 xlabel('Times (s)')
