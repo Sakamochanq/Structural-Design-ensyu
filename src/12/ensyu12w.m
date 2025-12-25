@@ -1,14 +1,11 @@
-% 基盤面の加速度 (G)
-a = (0:0.000075:3);
+% 1列目：時間（sec）,　2列目：基盤面の加速度（m/s²）
+data = readmatrix("l2wave.csv");
 
-% 初期条件入力 =0G
-% a(1) = 0;
-
-% 基盤面の加速度 (m/s2)
-a = a*9.81;
+% 基盤面の加速度a（m/s²）
+a = data(:,2)'/1000*9.81;
 
 % 時刻t
-t = (0:0.1:4000);
+t = data(:,1)';
 
 plot(t, a)
 xlabel('Time (s)')
@@ -99,9 +96,9 @@ for n=1:nt-1
         x(n+1) = x(n) + delta_x;
 
 
-        f2 = ForceDisp(x(n+1), xmax, xmin);
+        f2 = ForceDisp_ElastoPlastic(x(n+1), xmax, xmin);
  
-        f1 = ForceDisp(x(n), xmax, xmin);
+        f1 = ForceDisp_ElastoPlastic(x(n), xmax, xmin);
 
         delta_f = f2 - f1;
 
@@ -116,7 +113,7 @@ for n=1:nt-1
                 break
             end
         elseif delta_f / f2 < 10^(-4) && delta_f / f2 > -10^(-4) % |Δf/f|が10^-4未満
-            break;
+            break
         end
 
     end
@@ -142,20 +139,20 @@ for n=1:nt-1
     % 次のステップの剛性kを設定する
     if x(n+1) > xmax
         xmax = x(n+1);
-        f = ForceDisp(xmax, xmax, xmin);
+        f = ForceDisp_ElastoPlastic(xmax, xmax, xmin);
 
         % 割線剛性
         k = f / xmax;
 
     elseif x(n+1) < xmin
         xmin = x(n+1);
-        f = ForceDisp(xmin, xmax, xmin);
+        f = ForceDisp_ElastoPlastic(xmin, xmax, xmin);
 
         % 割線剛性
         k = f / xmin;
 
     else
-        f = ForceDisp(x(n+1), xmax, xmin);
+        f = ForceDisp_ElastoPlastic(x(n+1), xmax, xmin);
 
         % 割線剛性
         k = f / x(n+1);
